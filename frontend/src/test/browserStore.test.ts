@@ -2,6 +2,7 @@ import { describe, it, expect, beforeEach } from "vitest";
 import {
   useBrowserStore,
   getTabTitleForUrl,
+  resolvePortfolioRoute,
 } from "../features/browser/store/browserStore";
 
 describe("Browser Store & Tab Lifecycle", () => {
@@ -41,6 +42,15 @@ describe("Browser Store & Tab Lifecycle", () => {
     );
     expect(getTabTitleForUrl("portfolio://unknown-xyz")).toBe(
       "Not Found — 404",
+    );
+  });
+
+  it("resolves common search phrases to canonical portfolio routes", () => {
+    expect(resolvePortfolioRoute("about me")).toBe("portfolio://about");
+    expect(resolvePortfolioRoute("skills & stack")).toBe("portfolio://skills");
+    expect(resolvePortfolioRoute("contact me")).toBe("portfolio://contact");
+    expect(resolvePortfolioRoute("portfolio://about me")).toBe(
+      "portfolio://about",
     );
   });
 

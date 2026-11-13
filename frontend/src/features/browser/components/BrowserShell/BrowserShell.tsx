@@ -1,6 +1,9 @@
 import React from "react";
 import type { Tab } from "../../types";
-import { useBrowserStore } from "../../store/browserStore";
+import {
+  resolvePortfolioRoute,
+  useBrowserStore,
+} from "../../store/browserStore";
 import { BrowserTabStrip } from "../BrowserTabStrip/BrowserTabStrip";
 import { BrowserToolbar } from "../BrowserToolbar/BrowserToolbar";
 import { BrowserMenu } from "../BrowserMenu/BrowserMenu";
@@ -21,7 +24,7 @@ export const BrowserShell: React.FC = () => {
   const currentUrl = activeTab?.url || "portfolio://newtab";
 
   const renderTabContent = () => {
-    const cleanUrl = currentUrl.trim().toLowerCase();
+    const cleanUrl = resolvePortfolioRoute(currentUrl).trim().toLowerCase();
 
     if (
       cleanUrl === "portfolio://newtab" ||

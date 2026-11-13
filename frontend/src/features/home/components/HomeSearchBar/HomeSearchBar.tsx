@@ -1,6 +1,9 @@
 import React, { useState } from "react";
 import { Search, ArrowRight } from "lucide-react";
-import { useBrowserStore } from "../../../browser/store/browserStore";
+import {
+  resolvePortfolioRoute,
+  useBrowserStore,
+} from "../../../browser/store/browserStore";
 import styles from "./HomeSearchBar.module.css";
 
 interface HomeSearchBarProps {
@@ -25,27 +28,11 @@ export const HomeSearchBar: React.FC<HomeSearchBarProps> = ({
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    const raw = query.trim().toLowerCase();
+    const raw = query.trim();
     if (!raw) return;
 
-    if (raw.startsWith("portfolio://")) {
-      navigateTab(raw, true);
-    } else if (raw === "about" || raw === "about-me") {
-      navigateTab("portfolio://about", true);
-    } else if (raw === "skills" || raw === "tech") {
-      navigateTab("portfolio://skills", true);
-    } else if (raw === "projects" || raw === "work") {
-      navigateTab("portfolio://projects", true);
-    } else if (raw === "resume" || raw === "cv") {
-      navigateTab("portfolio://resume", true);
-    } else if (raw === "contact") {
-      navigateTab("portfolio://contact", true);
-    } else if (raw === "games") {
-      navigateTab("portfolio://games", true);
-    } else {
-      const sanitized = raw.replace(/[^a-z0-9_-]/g, "");
-      navigateTab(`portfolio://${sanitized || "search"}`, true);
-    }
+    const targetUrl = resolvePortfolioRoute(raw);
+    navigateTab(targetUrl, true);
   };
 
   return (

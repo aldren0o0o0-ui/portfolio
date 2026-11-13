@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { Lock, ArrowRight, X } from "lucide-react";
-import { useBrowserStore } from "../../store/browserStore";
+import { resolvePortfolioRoute, useBrowserStore } from "../../store/browserStore";
 import styles from "./AddressBar.module.css";
 
 export const AddressBar: React.FC = () => {
@@ -22,34 +22,8 @@ export const AddressBar: React.FC = () => {
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    let raw = inputValue.trim().toLowerCase();
-    if (!raw) {
-      raw = "portfolio://newtab";
-    }
-
-    let targetUrl: string;
-
-    if (raw.startsWith("portfolio://")) {
-      targetUrl = raw;
-    } else if (raw === "home" || raw === "newtab" || raw === "/") {
-      targetUrl = "portfolio://newtab";
-    } else if (raw === "about" || raw === "about-me") {
-      targetUrl = "portfolio://about";
-    } else if (raw === "skills" || raw === "technologies" || raw === "stack") {
-      targetUrl = "portfolio://skills";
-    } else if (raw === "projects" || raw === "work" || raw === "portfolio") {
-      targetUrl = "portfolio://projects";
-    } else if (raw === "resume" || raw === "cv") {
-      targetUrl = "portfolio://resume";
-    } else if (raw === "contact" || raw === "message" || raw === "hire") {
-      targetUrl = "portfolio://contact";
-    } else if (raw === "games" || raw === "game") {
-      targetUrl = "portfolio://games";
-    } else {
-      // Clean query string for unknown destination
-      const sanitized = raw.replace(/[^a-z0-9_-]/g, "");
-      targetUrl = `portfolio://${sanitized || "search"}`;
-    }
+    const raw = inputValue.trim();
+    const targetUrl = resolvePortfolioRoute(raw || "portfolio://newtab");
 
     navigateTab(targetUrl, true);
     setInputValue(targetUrl);

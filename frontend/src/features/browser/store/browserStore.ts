@@ -4,11 +4,64 @@ import { FIREFOX_CONFIG } from "../themes/browserConfigs";
 
 let tabCounter = 1;
 
+const ROUTE_ALIASES: Record<string, string[]> = {
+  "portfolio://newtab": ["", "new tab", "newtab", "home", "firefox", "browser home", "start"],
+  "portfolio://about": ["about", "about me", "bio", "profile", "who am i", "whoami", "my story"],
+  "portfolio://skills": ["skills", "skill", "stack", "tech", "technology", "technologies", "tools", "languages", "skills and stack", "stack and skills"],
+  "portfolio://projects": ["projects", "project", "portfolio", "work", "case studies", "showcase", "featured work"],
+  "portfolio://resume": ["resume", "cv", "curriculum vitae", "experience", "career"],
+  "portfolio://contact": ["contact", "contact me", "hire", "message", "reach out", "get in touch", "email", "inquiry", "inquiries"],
+  "portfolio://games": ["games", "game", "play", "interactive games", "mini games"],
+};
+
+export const resolvePortfolioRoute = (input: string): string => {
+  const rawInput = input?.trim() ?? "";
+  if (!rawInput) return "portfolio://newtab";
+
+  const lowerInput = rawInput.toLowerCase();
+  const normalizedInput = lowerInput.replace(/^\/+/, "");
+  const hasScheme = normalizedInput.startsWith("portfolio://");
+  const candidate = hasScheme
+    ? normalizedInput.slice("portfolio://".length)
+    : normalizedInput;
+  const compactCandidate = candidate.replace(/[^a-z0-9]+/g, " ").trim();
+
+  if (!compactCandidate) return "portfolio://newtab";
+
+  for (const [route, aliases] of Object.entries(ROUTE_ALIASES)) {
+    const aliasMatches = aliases.map((alias) =>
+      alias.replace(/[^a-z0-9]+/g, " ").trim(),
+    );
+    const routeTokens = compactCandidate.split(/\s+/);
+
+    const matched = aliasMatches.some((alias) => {
+      if (!alias) return false;
+      const aliasTokens = alias.split(/\s+/);
+      const canonicalText = compactCandidate;
+      return (
+        canonicalText === alias ||
+        canonicalText.includes(alias) ||
+        alias.includes(canonicalText) ||
+        aliasTokens.every((token) => routeTokens.includes(token)) ||
+        routeTokens.every((token) => alias.includes(token))
+      );
+    });
+
+    if (matched) {
+      return route;
+    }
+  }
+
+  const sanitized = candidate.replace(/[^a-z0-9_-]/g, "");
+  const fallback = sanitized || "search";
+  return `portfolio://${fallback}`;
+};
+
 export const getTabTitleForUrl = (
   url: string,
   _browser?: BrowserType | null,
 ): string => {
-  const cleanUrl = url.trim().toLowerCase();
+  const cleanUrl = resolvePortfolioRoute(url);
   if (
     cleanUrl === "portfolio://newtab" ||
     cleanUrl === "/" ||
