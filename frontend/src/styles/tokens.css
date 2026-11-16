@@ -1,192 +1,106 @@
 /**
  * Core Design Tokens
- * Blue-and-white visual identity with light and dark mode variations.
+ * Neo-Brutalist Editorial & Graph-Paper System
+ * Warm cream grid-paper, crisp dark ink borders, hard offset shadows,
+ * burnt orange & forest green accents.
  */
 
 :root {
-  /* Font Family */
+  /* Font Families */
   --font-sans:
-    -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial,
+    "Plus Jakarta Sans", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto,
     sans-serif;
-  --font-mono: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+  --font-mono:
+    "JetBrains Mono", ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas,
+    monospace;
 
   /* Typography Scale */
   --text-xs: 0.75rem;
-  /* 12px */
   --text-sm: 0.8125rem;
-  /* 13px */
-  --text-base: 0.875rem;
-  /* 14px */
+  --text-base: 0.9375rem;
   --text-md: 1rem;
-  /* 16px */
   --text-lg: 1.125rem;
-  /* 18px */
   --text-xl: 1.25rem;
-  /* 20px */
   --text-2xl: 1.5rem;
-  /* 24px */
-  --text-3xl: 1.875rem;
-  /* 30px */
+  --text-3xl: 2rem;
+  --text-4xl: 2.5rem;
 
   /* Spacing */
   --space-1: 0.25rem;
-  /* 4px */
   --space-2: 0.5rem;
-  /* 8px */
   --space-3: 0.75rem;
-  /* 12px */
   --space-4: 1rem;
-  /* 16px */
   --space-5: 1.25rem;
-  /* 20px */
   --space-6: 1.5rem;
-  /* 24px */
   --space-8: 2rem;
-  /* 32px */
   --space-10: 2.5rem;
-  /* 40px */
   --space-12: 3rem;
-  /* 48px */
 
-  /* Border Radii */
-  --radius-xs: 3px;
-  --radius-sm: 6px;
-  --radius-md: 8px;
-  --radius-lg: 12px;
-  --radius-xl: 16px;
+  /* Border Radii (sharp editorial neo-brutalism) */
+  --radius-xs: 2px;
+  --radius-sm: 2px;
+  --radius-md: 4px;
+  --radius-lg: 4px;
+  --radius-xl: 6px;
   --radius-full: 9999px;
 
   /* Transitions */
-  --transition-fast: 120ms cubic-bezier(0.4, 0, 0.2, 1);
-  --transition-normal: 180ms cubic-bezier(0.4, 0, 0.2, 1);
-  --transition-smooth: 240ms cubic-bezier(0.4, 0, 0.2, 1);
+  --transition-fast: 120ms cubic-bezier(0.2, 0.8, 0.2, 1);
+  --transition-normal: 180ms cubic-bezier(0.2, 0.8, 0.2, 1);
+  --transition-smooth: 240ms cubic-bezier(0.2, 0.8, 0.2, 1);
 
-  /* Primary Brand Blue */
-  --color-primary-50: #eff6ff;
-  --color-primary-100: #dbeafe;
-  --color-primary-200: #bfdbfe;
-  --color-primary-300: #93c5fd;
-  --color-primary-400: #60a5fa;
-  --color-primary-500: #3b82f6;
-  --color-primary-600: #2563eb;
-  --color-primary-700: #1d4ed8;
-  --color-primary-800: #1e40af;
-  --color-primary-900: #1e3a8a;
-
-  /* Semantic Accents */
-  --color-success: #10b981;
-  --color-warning: #f59e0b;
-  --color-danger: #ef4444;
-  --color-info: #0284c7;
-
-  /* Light Theme Variables */
-  --bg-app: #f1f5f9;
-  --bg-shell: #e2e8f0;
-  --bg-toolbar: #f8fafc;
+  /* Paper & Surface Colors */
+  --bg-app: #faf6ee;
+  --bg-shell: #faf6ee;
+  --bg-toolbar: #ffffff;
   --bg-surface: #ffffff;
   --bg-surface-elevated: #ffffff;
-  --bg-surface-subtle: #f8fafc;
-  --bg-surface-hover: #f1f5f9;
-  --bg-surface-active: #e2e8f0;
+  --bg-surface-subtle: #f5efe2;
+  --bg-surface-hover: #f3ece0;
+  --bg-surface-active: #ebe3d3;
 
-  --border-subtle: #e2e8f0;
-  --border-medium: #cbd5e1;
-  --border-strong: #94a3b8;
-  --border-focus: #2563eb;
+  /* Grid Paper Line */
+  --grid-line: rgba(24, 24, 27, 0.055);
 
-  --text-primary: #0f172a;
-  --text-secondary: #475569;
-  --text-muted: #64748b;
-  --text-disabled: #94a3b8;
-  --text-inverse: #ffffff;
+  /* Ink & Borders */
+  --border-ink: #18181b;
+  --border-subtle: #e5dfd2;
+  --border-medium: #d4cdc0;
+  --border-strong: #18181b;
+  --border-focus: #ea580c;
 
-  --accent-primary: #2563eb;
-  --accent-hover: #1d4ed8;
-  --accent-subtle: #eff6ff;
-  --accent-border: #bfdbfe;
+  /* Text Hierarchy */
+  --text-primary: #18181b;
+  --text-secondary: #52525b;
+  --text-muted: #71717a;
+  --text-disabled: #a1a1aa;
+  --text-inverse: #faf6ee;
 
-  --shadow-sm: 0 1px 2px 0 rgba(15, 23, 42, 0.05);
-  --shadow-md:
-    0 4px 6px -1px rgba(15, 23, 42, 0.08), 0 2px 4px -2px rgba(15, 23, 42, 0.04);
-  --shadow-lg:
-    0 10px 15px -3px rgba(15, 23, 42, 0.08),
-    0 4px 6px -4px rgba(15, 23, 42, 0.03);
-  --shadow-shell:
-    0 20px 25px -5px rgba(15, 23, 42, 0.12),
-    0 8px 10px -6px rgba(15, 23, 42, 0.06);
+  /* Brand & Semantic Accents */
+  --accent-primary: #ea580c;
+  --accent-hover: #c2410c;
+  --accent-subtle: #fff7ed;
+  --accent-border: #fdba74;
 
-  /* Tab specific tokens for Light Mode */
-  --tab-bg-active: #ffffff;
-  --tab-bg-inactive: transparent;
-  --tab-bg-hover: rgba(0, 0, 0, 0.04);
-  --tab-text-active: #0f172a;
-  --tab-text-inactive: #475569;
-  --addressbar-bg: #ffffff;
-  --addressbar-border: #cbd5e1;
-  --addressbar-text: #0f172a;
-}
+  --accent-green: #15803d;
+  --accent-green-bg: #166534;
+  --accent-teal: #14b8a6;
 
-/* Dark Theme Variables - Completely Dark (True Neutral Black) */
-[data-theme="dark"] {
-  --bg-app: #000000;
-  --bg-shell: #050505;
-  --bg-toolbar: #0f0f0f;
-  --bg-surface: #0a0a0a;
-  --bg-surface-elevated: #141414;
-  --bg-surface-subtle: #121212;
-  --bg-surface-hover: #1f1f1f;
-  --bg-surface-active: #262626;
+  --pill-dark-bg: #27272a;
+  --pill-dark-text: #faf6ee;
 
-  --border-subtle: #1c1c1c;
-  --border-medium: #282828;
-  --border-strong: #383838;
-  --border-focus: #3b82f6;
+  --color-success: #15803d;
+  --color-warning: #d97706;
+  --color-danger: #dc2626;
+  --color-info: #0284c7;
 
-  --text-primary: #f5f5f5;
-  --text-secondary: #a3a3a3;
-  --text-muted: #737373;
-  --text-disabled: #4a4a4a;
-  --text-inverse: #000000;
+  /* Hard Offset Neo-Brutalist Shadows */
+  --shadow-brutal: 4px 4px 0px #18181b;
+  --shadow-brutal-sm: 3px 3px 0px #18181b;
+  --shadow-brutal-xs: 2px 2px 0px #18181b;
 
-  --accent-primary: #3b82f6;
-  --accent-hover: #60a5fa;
-  --accent-subtle: rgba(59, 130, 246, 0.12);
-  --accent-border: rgba(59, 130, 246, 0.28);
-
-  --shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.7);
-  --shadow-md:
-    0 4px 6px -1px rgba(0, 0, 0, 0.8), 0 2px 4px -2px rgba(0, 0, 0, 0.6);
-  --shadow-lg:
-    0 10px 15px -3px rgba(0, 0, 0, 0.9),
-    0 4px 6px -4px rgba(0, 0, 0, 0.7);
-  --shadow-shell:
-    0 25px 50px -12px rgba(0, 0, 0, 0.95);
-
-  /* Tab specific tokens for Dark Mode */
-  --tab-bg-active: #141414;
-  --tab-bg-inactive: transparent;
-  --tab-bg-hover: rgba(255, 255, 255, 0.06);
-  --tab-text-active: #ffffff;
-  --tab-text-inactive: #888888;
-  --addressbar-bg: #050505;
-  --addressbar-border: #262626;
-  --addressbar-text: #f5f5f5;
-}
-
-/* Firefox Browser Styling Overlays */
-:root {
-  --browser-theme-color: #0060df;
-  --browser-tab-radius: 6px;
-}
-
-[data-browser="firefox"] {
-  --browser-theme-color: #0060df;
-  --browser-tab-radius: 6px;
-}
-
-[data-browser="firefox"][data-theme="dark"] {
-  --bg-shell: #050505;
-  --bg-toolbar: #0f0f0f;
-  --tab-bg-active: #161616;
-  --addressbar-bg: #050505;
+  --shadow-sm: 2px 2px 0px #18181b;
+  --shadow-md: 3px 3px 0px #18181b;
+  --shadow-lg: 4px 4px 0px #18181b;
+  --shadow-shell: 4px 4px 0px #18181b;
 }

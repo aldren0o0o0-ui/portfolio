@@ -11,26 +11,28 @@
 
 html,
 body {
-  height: 100%;
+  min-height: 100%;
   width: 100%;
 }
 
 body {
   font-family: var(--font-sans);
   font-size: var(--text-base);
-  line-height: 1.5;
+  line-height: 1.55;
   color: var(--text-primary);
   background-color: var(--bg-app);
+  background-image:
+    linear-gradient(to right, var(--grid-line) 1px, transparent 1px),
+    linear-gradient(to bottom, var(--grid-line) 1px, transparent 1px);
+  background-size: 24px 24px;
+  background-attachment: fixed;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   overflow-x: hidden;
-  transition:
-    background-color var(--transition-smooth),
-    color var(--transition-smooth);
 }
 
 #root {
-  min-height: 100%;
+  min-height: 100vh;
   display: flex;
   flex-direction: column;
 }
@@ -43,8 +45,9 @@ h4,
 h5,
 h6 {
   color: var(--text-primary);
-  font-weight: 600;
-  line-height: 1.25;
+  font-weight: 700;
+  line-height: 1.18;
+  letter-spacing: -0.02em;
 }
 
 p {
@@ -84,9 +87,12 @@ textarea {
 }
 
 input:focus,
+textarea:focus,
+select:focus,
 button:focus-visible,
 a:focus-visible {
-  outline: none;
+  outline: 2px solid var(--accent-primary);
+  outline-offset: 2px;
 }
 
 /* Scrollbar Styling */
@@ -96,16 +102,16 @@ a:focus-visible {
 }
 
 ::-webkit-scrollbar-track {
-  background: transparent;
+  background: var(--bg-app);
 }
 
 ::-webkit-scrollbar-thumb {
   background: var(--border-medium);
-  border-radius: var(--radius-full);
+  border: 1px solid var(--border-ink);
 }
 
 ::-webkit-scrollbar-thumb:hover {
-  background: var(--border-strong);
+  background: var(--text-muted);
 }
 
 /* Reduced Motion Respect */
@@ -117,5 +123,13 @@ a:focus-visible {
     animation-iteration-count: 1 !important;
     transition-duration: 0.01ms !important;
     scroll-behavior: auto !important;
+  }
+}
+
+/* Print overrides for Resume */
+@media print {
+  body {
+    background: #ffffff !important;
+    background-image: none !important;
   }
 }
