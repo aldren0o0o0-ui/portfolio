@@ -143,7 +143,7 @@ export const OverviewPage: React.FC = () => {
             </span>
 
             <h1 className={styles.heroHeadline}>
-              Need a system?
+              Aspiring Software Developer
               <br />
               <span className={styles.headlineAccent}>Let&apos;s build it.</span>
             </h1>
@@ -268,9 +268,8 @@ export const OverviewPage: React.FC = () => {
           {PORTFOLIO_PROJECTS.map((project, index) => (
             <article
               key={project.id}
-              className={`${styles.projectCard} ${
-                index === 0 ? styles.projectCardWide : ""
-              }`}
+              className={`${styles.projectCard} ${index === 0 ? styles.projectCardWide : ""
+                }`}
               onClick={() => handleNavigate("portfolio://projects")}
             >
               {project.imageUrl && (
