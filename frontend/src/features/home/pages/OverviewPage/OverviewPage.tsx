@@ -112,17 +112,27 @@ export const OverviewPage: React.FC = () => {
         <div className={styles.heroGrid}>
           {/* Left Framed Profile Box */}
           <div className={styles.avatarFrame}>
-            <div className={styles.avatarInner}>
-              <div className={styles.avatarMonogram} aria-hidden="true">
-                AD
+            {PROFILE_DATA.avatarUrl ? (
+              <div className={styles.avatarPhotoWrap}>
+                <img
+                  src={PROFILE_DATA.avatarUrl}
+                  alt="Aldren Dico profile"
+                  className={styles.avatarPhoto}
+                />
               </div>
-              <div className={styles.avatarCaption}>
-                <span className={styles.avatarName}>Aldren Dico</span>
-                <span className={styles.avatarSub}>
-                  {PROFILE_DATA.contact.location}
-                </span>
+            ) : (
+              <div className={styles.avatarInner}>
+                <div className={styles.avatarMonogram} aria-hidden="true">
+                  AD
+                </div>
+                <div className={styles.avatarCaption}>
+                  <span className={styles.avatarName}>Aldren Dico</span>
+                  <span className={styles.avatarSub}>
+                    {PROFILE_DATA.contact.location}
+                  </span>
+                </div>
               </div>
-            </div>
+            )}
             <div className={styles.avatarTag}>BSIT • BUENAVISTA CC</div>
           </div>
 

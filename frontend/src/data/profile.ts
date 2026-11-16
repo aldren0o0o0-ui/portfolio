@@ -22,6 +22,7 @@ export interface EngineeringPrinciple {
 export interface ProfileData {
   name: string;
   title: string;
+  avatarUrl?: string | null;
   summary: string;
   professionalFocus: string;
   education: EducationItem[];
@@ -30,8 +31,9 @@ export interface ProfileData {
 }
 
 export const PROFILE_DATA: ProfileData = {
-  name: "Aspiring Software Engineer",
-  title: "Software Engineering Student | Full-Stack Developer",
+  name: "Aldren Loquias Dico",
+  title: "BSIT Student | Aspiring Software Engineer | Full-Stack Developer",
+  avatarUrl: "/images/profile.png",
   summary:
     "BSIT student and aspiring software engineer with hands-on experience building full-stack web applications with Python, FastAPI, React, and PostgreSQL. Skilled in REST API development, relational database design, and application logic for scheduling, e-commerce, and business operations. Focused on reliable, maintainable software that solves practical workflow problems.",
   professionalFocus:
