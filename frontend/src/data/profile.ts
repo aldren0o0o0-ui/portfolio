@@ -76,7 +76,7 @@ export const PROFILE_DATA: ProfileData = {
   ],
   contact: {
     email: "aldren.dico.it@gmail.com", // Configurable email address
-    githubUrl: "https://github.com/settings/profile", // Configurable: set to real GitHub profile URL when ready
+    githubUrl: "https://github.com/aldren0o0o0-ui", // Configurable: set to real GitHub profile URL when ready
     linkedinUrl: null, // Configurable: set to real LinkedIn profile URL when ready
     location: "Bohol, Philippines",
   },
