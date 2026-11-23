@@ -207,7 +207,7 @@ export const ProjectCard: React.FC<ProjectCardProps> = ({ project }) => {
       )}
 
       {/* Footer Actions & Links */}
-      <div className={styles.footer}>
+      {/* <div className={styles.footer}>
         <div className={styles.linksGroup}>
           {project.githubUrl ? (
             <a
@@ -267,7 +267,7 @@ export const ProjectCard: React.FC<ProjectCardProps> = ({ project }) => {
           </span>
           {isExpanded ? <ChevronUp size={14} /> : <ChevronDown size={14} />}
         </button>
-      </div>
+      </div> */}
     </article>
   );
 };
