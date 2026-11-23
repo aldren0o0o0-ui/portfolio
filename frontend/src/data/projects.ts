@@ -25,6 +25,69 @@ export interface PortfolioProject {
 
 export const PORTFOLIO_PROJECTS: PortfolioProject[] = [
   {
+    id: "study-guide",
+    title: "StudyGuide — AI Learning Companion",
+    tagline: "AI Learning Companion & Offline-First Mobile/Web App",
+    category: "Full-Stack AI & Cross-Platform App",
+    description:
+      "Cross-platform mobile and web learning platform helping students turn raw study materials (PDF, DOCX, and TXT files) into active, interactive study sessions—even when offline.",
+    problemAddressed:
+      "Addresses passive reading and unreliable internet access by turning raw documents into grounded AI summaries, adaptive quizzes, real-time voice coaching, and offline-cached study sessions.",
+    techStack: [
+      "React Native (Expo)",
+      "TypeScript",
+      "FastAPI",
+      "PostgreSQL (pgvector)",
+      "Gemini Live",
+      "Redis / Valkey",
+      "Zustand",
+      "HTML5 Canvas",
+    ],
+    status: "Completed",
+    features: [
+      {
+        title: "AI Document Analysis (pgvector)",
+        description:
+          "Extracts and chunks uploaded PDF, DOCX, and TXT files using vector embeddings to generate structured summaries, key concepts, and definitions.",
+        status: "Completed",
+      },
+      {
+        title: "Smart Exam Reviewer",
+        description:
+          "Creates multiple-choice, true/false, and short-answer quizzes grounded in source documents with instant grading, explanations, and offline retakes.",
+        status: "Completed",
+      },
+      {
+        title: "Real-Time AI Voice Practice",
+        description:
+          "Bidirectional WebSocket voice coaching powered by Gemini Live (24 kHz streaming audio + live transcription) for mock interviews and oral defenses.",
+        status: "Completed",
+      },
+      {
+        title: "Grounded AI Chat & Study Planner",
+        description:
+          "Multi-turn Q&A assistant citing uploaded materials plus a persistent daily planner synced with PostgreSQL and local storage.",
+        status: "Completed",
+      },
+      {
+        title: "Offline-First Sync & Persistent Auth",
+        description:
+          "Caches documents, analyses, chats, and quizzes locally, skips re-login when offline, and syncs pending changes automatically on reconnect.",
+        status: "Completed",
+      },
+      {
+        title: "Study Break Arcade (7 Canvas Games)",
+        description:
+          "7 built-in 60fps HTML5 Canvas mini-games (Blade Rift, Neon Drift, Violet Sudoku, Memory Rift, Astro Breaker, Neon Block Surge, Math Blitz Runner).",
+        status: "Completed",
+      },
+    ],
+    githubUrl: null,
+    liveDemoUrl: "https://aldren-study-guide.netlify.app/",
+    architectureNotes:
+      "React Native (Expo SDK 58), Expo Router, TypeScript, TanStack Query, and Zustand frontend paired with a Python FastAPI, SQLAlchemy, Alembic, and RQ (Redis Queue) backend on PostgreSQL (pgvector) & Valkey/Redis, deployed across Netlify, Render, and EAS Build.",
+  },
+  {
     id: "omnisport-ai",
     title: "OmniSport AI - Capstone Project",
     imageUrl: "/images/projects/omnisportai.png",

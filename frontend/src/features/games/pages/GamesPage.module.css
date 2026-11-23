@@ -1,7 +1,7 @@
 .container {
   display: flex;
   flex-direction: column;
-  gap: 24px;
+  gap: 20px;
   color: var(--text-primary);
 }
 
@@ -51,6 +51,41 @@
   font-size: 0.9375rem;
   color: var(--text-secondary);
   line-height: 1.6;
+}
+
+.filtersBar {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+.filterBtn {
+  font-family: var(--font-mono);
+  font-size: 0.75rem;
+  font-weight: 600;
+  padding: 7px 14px;
+  border-radius: var(--radius-xs);
+  background-color: var(--bg-surface);
+  border: 1.5px solid var(--border-ink);
+  box-shadow: var(--shadow-brutal-xs);
+  color: var(--text-secondary);
+  transition: all var(--transition-fast);
+  cursor: pointer;
+}
+
+.filterBtn:hover {
+  transform: translate(-1px, -1px);
+  color: var(--text-primary);
+}
+
+.filterBtnActive {
+  background-color: var(--accent-primary);
+  color: #ffffff;
+}
+
+.filterBtnActive:hover {
+  color: #ffffff;
 }
 
 .gameActiveBar {
@@ -103,8 +138,16 @@
   padding: 20px;
   display: flex;
   flex-direction: column;
-  gap: 16px;
+  gap: 14px;
   justify-content: space-between;
+  transition:
+    transform var(--transition-fast),
+    box-shadow var(--transition-fast);
+}
+
+.gameCard:hover {
+  transform: translate(-1px, -1px);
+  box-shadow: 4px 4px 0px var(--border-ink);
 }
 
 .cardHeader {
@@ -129,12 +172,31 @@
 .cardMeta {
   display: flex;
   flex-direction: column;
-  gap: 2px;
+  gap: 3px;
+  min-width: 0;
+  flex: 1;
+}
+
+.cardTitleLine {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-wrap: wrap;
 }
 
 .gameName {
   font-size: 1.125rem;
   font-weight: 800;
+}
+
+.genrePill {
+  font-family: var(--font-mono);
+  font-size: 0.625rem;
+  font-weight: 500;
+  padding: 2px 7px;
+  background-color: var(--pill-dark-bg);
+  color: var(--pill-dark-text);
+  border-radius: var(--radius-xs);
 }
 
 .gameTagline {
@@ -177,6 +239,22 @@
   background-color: var(--accent-primary);
   border-radius: 50%;
   flex-shrink: 0;
+}
+
+.controlsBox {
+  font-family: var(--font-mono);
+  font-size: 0.6875rem;
+  color: var(--text-secondary);
+  background-color: var(--bg-surface-subtle);
+  border: 1px solid var(--border-medium);
+  border-radius: var(--radius-xs);
+  padding: 7px 10px;
+  line-height: 1.45;
+}
+
+.controlsLabel {
+  font-weight: 700;
+  color: var(--text-primary);
 }
 
 .cardFooter {

@@ -443,6 +443,49 @@
   display: block;
 }
 
+.projectBannerFrame {
+  width: 100%;
+  border: 1.5px solid var(--border-ink);
+  border-radius: var(--radius-xs);
+  background-color: var(--bg-surface-subtle);
+  padding: 18px 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.projectBannerDesc {
+  font-size: 0.9rem;
+  line-height: 1.55;
+  color: var(--text-primary);
+}
+
+.projectTitleActions {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+.liveDemoLink {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  font-family: var(--font-mono);
+  font-size: 0.6875rem;
+  font-weight: 600;
+  padding: 2px 9px;
+  background-color: var(--accent-primary);
+  color: #ffffff;
+  border: 1px solid var(--border-ink);
+  border-radius: var(--radius-xs);
+}
+
+.liveDemoLink:hover {
+  background-color: var(--accent-hover);
+  color: #ffffff;
+}
+
 .projectCardBody {
   display: flex;
   flex-direction: column;

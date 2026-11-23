@@ -152,7 +152,7 @@ export const OverviewPage: React.FC = () => {
 
             <div className={styles.statsGrid}>
               <div className={styles.statBox}>
-                <span className={styles.statValue}>3+</span>
+                <span className={styles.statValue}>4+</span>
                 <span className={styles.statLabel}>Full-stack systems</span>
               </div>
               <div className={styles.statBox}>
@@ -272,7 +272,7 @@ export const OverviewPage: React.FC = () => {
                 }`}
               onClick={() => handleNavigate("portfolio://projects")}
             >
-              {project.imageUrl && (
+              {project.imageUrl ? (
                 <div className={styles.projectImageFrame}>
                   <img
                     src={project.imageUrl}
@@ -281,19 +281,41 @@ export const OverviewPage: React.FC = () => {
                     loading="lazy"
                   />
                 </div>
+              ) : (
+                <div className={styles.projectBannerFrame}>
+                  <span className={styles.eyebrowOrange}>
+                    {project.category.toUpperCase()}
+                  </span>
+                  <p className={styles.projectBannerDesc}>
+                    {project.description}
+                  </p>
+                </div>
               )}
 
               <div className={styles.projectCardBody}>
                 <div className={styles.projectTitleRow}>
                   <h3 className={styles.projectTitle}>{project.title}</h3>
-                  <span className={styles.projectStatusPill}>
-                    {project.status}
-                  </span>
+                  <div className={styles.projectTitleActions}>
+                    {project.liveDemoUrl && (
+                      <a
+                        href={project.liveDemoUrl}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className={styles.liveDemoLink}
+                        onClick={(e) => e.stopPropagation()}
+                      >
+                        Live Site <ArrowUpRight size={12} />
+                      </a>
+                    )}
+                    <span className={styles.projectStatusPill}>
+                      {project.status}
+                    </span>
+                  </div>
                 </div>
 
                 <div className={styles.projectTagRow}>
                   <span className={styles.darkPill}>
-                    {project.techStack.slice(0, 3).join(" · ").toLowerCase()}
+                    {project.techStack.slice(0, 4).join(" · ").toLowerCase()}
                   </span>
                 </div>
 
