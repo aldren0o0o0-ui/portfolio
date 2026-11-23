@@ -27,6 +27,7 @@ export const PORTFOLIO_PROJECTS: PortfolioProject[] = [
   {
     id: "study-guide",
     title: "StudyGuide — AI Learning Companion",
+    imageUrl: "/images/projects/study-guide.png",
     tagline: "AI Learning Companion & Offline-First Mobile/Web App",
     category: "Full-Stack AI & Cross-Platform App",
     description:
@@ -175,7 +176,7 @@ export const PORTFOLIO_PROJECTS: PortfolioProject[] = [
     architectureNotes:
       "Built with a modular FastAPI service structure and PostgreSQL persistence, designed for upcoming multi-tenant marketplace extension.",
   },
-   {
+  {
     id: "coffeeShop",
     title: "ldrn's Coffee - School Project",
     imageUrl: "/images/projects/coffee.png",
