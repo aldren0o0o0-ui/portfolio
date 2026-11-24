@@ -5,6 +5,7 @@ import { buildAstroBreakerHtml } from "./astroBreakerHtml";
 import { buildBlitzRunnerHtml } from "./blitzRunnerHtml";
 import { buildNitroDriftHtml } from "./nitroDriftHtml";
 import { buildSudokuHtml } from "./sudokuHtml";
+import { buildMiliMilitiaHtml } from "./miliMilitiaHtml";
 
 export type ArcadeGameId =
   | "blade-rift"
@@ -13,7 +14,8 @@ export type ArcadeGameId =
   | "astro-breaker"
   | "blitz-runner"
   | "nitro-drift"
-  | "violet-sudoku";
+  | "violet-sudoku"
+  | "mili-militia";
 
 export interface ArcadeGameMeta {
   id: ArcadeGameId;
@@ -131,5 +133,20 @@ export const ARCADE_GAMES: ArcadeGameMeta[] = [
     ],
     controls: "Click cell + 1–9 pad or Arrow keys + Backspace",
     buildHtml: buildSudokuHtml,
+  },
+  {
+    id: "mili-militia",
+    title: "Mili Militia",
+    genrePill: "shooter · 2d jetpack",
+    tagline: "2D Jetpack Arena Shooter",
+    description:
+      "Side-scrolling 2200×1200 tactical arena with jetpack flight, 4 weapons (Assault, Shotgun, Railgun, Rocket), frag grenades, and AI militia waves.",
+    highlights: [
+      "Jetpack flight, cover platforms & live minimap",
+      "4 switchable weapons + bouncing frag grenades",
+      "Escalating AI militia bot waves & persistent best score",
+    ],
+    controls: "WASD/Arrows + Space (Jetpack) · Mouse (Aim/Fire) · G (Frag) · Q (Swap)",
+    buildHtml: buildMiliMilitiaHtml,
   },
 ];

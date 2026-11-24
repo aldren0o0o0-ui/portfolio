@@ -12,6 +12,7 @@ import {
   Calculator,
   Car,
   Hash,
+  Crosshair,
 } from "lucide-react";
 import { MemoryMatchGame } from "../memory-match/MemoryMatchGame";
 import { DeveloperQuizGame } from "../developer-quiz/DeveloperQuizGame";
@@ -33,6 +34,7 @@ const ARCADE_ICONS: Record<ArcadeGameId, React.ReactNode> = {
   "blitz-runner": <Calculator size={22} aria-hidden="true" />,
   "nitro-drift": <Car size={22} aria-hidden="true" />,
   "violet-sudoku": <Hash size={22} aria-hidden="true" />,
+  "mili-militia": <Crosshair size={22} aria-hidden="true" />,
 };
 
 export const GamesPage: React.FC = () => {
@@ -56,11 +58,11 @@ export const GamesPage: React.FC = () => {
           <h1 className={styles.title}>Study Break Arcade &amp; Playground</h1>
           <span className={styles.badge}>
             <Gamepad2 size={13} aria-hidden="true" />
-            <span>9 Playable Games</span>
+            <span>10 Playable Games</span>
           </span>
         </div>
         <p className={styles.subtitle}>
-          7 self-contained 60fps HTML5 Canvas &amp; JavaScript arcade games
+          8 self-contained 60fps HTML5 Canvas &amp; JavaScript arcade games
           (with Web Audio synth SFX and desktop/touch controls) alongside 2
           interactive React engineering mini-apps.
         </p>
@@ -100,7 +102,7 @@ export const GamesPage: React.FC = () => {
               }`}
               onClick={() => setFilter("all")}
             >
-              All Games (9)
+              All Games (10)
             </button>
             <button
               type="button"
@@ -111,7 +113,7 @@ export const GamesPage: React.FC = () => {
               }`}
               onClick={() => setFilter("arcade")}
             >
-              HTML5 Canvas Arcade (7)
+              HTML5 Canvas Arcade (8)
             </button>
             <button
               type="button"
