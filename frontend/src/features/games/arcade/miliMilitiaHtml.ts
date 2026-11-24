@@ -108,6 +108,53 @@ export function buildMiliMilitiaHtml(): string {
   };
   const WEAPON_KEYS = ['rifle', 'shotgun', 'sniper', 'rocket'];
 
+  // Difficulty presets
+  const DIFFICULTIES = {
+    easy: {
+      label: 'EASY',
+      color: '#22c55e',
+      playerHp: 140,
+      botHp: 35,
+      startBots: 2,
+      maxBots: 3,
+      maxAttackers: 1,
+      detectRange: 380,
+      fireInterval: 1.55,
+      aimSpread: 0.28,
+      botSpeed: 135,
+      botDmgMult: 0.55,
+    },
+    medium: {
+      label: 'MEDIUM',
+      color: '#f59e0b',
+      playerHp: 100,
+      botHp: 50,
+      startBots: 3,
+      maxBots: 5,
+      maxAttackers: 2,
+      detectRange: 470,
+      fireInterval: 0.95,
+      aimSpread: 0.16,
+      botSpeed: 180,
+      botDmgMult: 0.8,
+    },
+    hard: {
+      label: 'HARD',
+      color: '#ef4444',
+      playerHp: 100,
+      botHp: 70,
+      startBots: 4,
+      maxBots: 7,
+      maxAttackers: 3,
+      detectRange: 580,
+      fireInterval: 0.55,
+      aimSpread: 0.07,
+      botSpeed: 220,
+      botDmgMult: 1.0,
+    },
+  };
+  let difficulty = 'medium';
+
   // State
   const BEST_KEY = 'mili_militia_best';
   let bestScore = Number(localStorage.getItem(BEST_KEY) || '0');
@@ -136,10 +183,11 @@ export function buildMiliMilitiaHtml(): string {
   let rightStick = { id: null, sx: 0, sy: 0, dx: 0, dy: 0, active: false };
 
   function makeSoldier(x, y, isPlayer) {
+    const d = DIFFICULTIES[difficulty];
     return {
       x, y, vx: 0, vy: 0, w: 28, h: 42,
-      hp: isPlayer ? 100 : 55 + wave * 8,
-      maxHp: isPlayer ? 100 : 55 + wave * 8,
+      hp: isPlayer ? d.playerHp : d.botHp + wave * 6,
+      maxHp: isPlayer ? d.playerHp : d.botHp + wave * 6,
       fuel: 100,
       maxFuel: 100,
       aim: 0,
@@ -152,11 +200,12 @@ export function buildMiliMilitiaHtml(): string {
       fireCd: 0,
       grenades: isPlayer ? 3 : 0,
       grenadeCd: 0,
-      invuln: isPlayer ? 1.2 : 0.4,
+      invuln: isPlayer ? 2.4 : 0.6,
       jetActive: false,
       aiTimer: 0,
       aiDir: Math.random() < 0.5 ? -1 : 1,
       aiJet: false,
+      botFireTimer: isPlayer ? 0 : 1.4 + Math.random() * 0.8,
     };
   }
 
@@ -186,6 +235,7 @@ export function buildMiliMilitiaHtml(): string {
 
   function startGame() {
     ensureAudio();
+    const d = DIFFICULTIES[difficulty];
     score = 0;
     kills = 0;
     streak = 0;
@@ -198,7 +248,7 @@ export function buildMiliMilitiaHtml(): string {
     particles = [];
     pickups = [];
     floatTexts = [];
-    for (let i = 0; i < 3; i++) spawnBot();
+    for (let i = 0; i < d.startBots; i++) spawnBot();
     spawnPickup(340, 480, 'sniper');
     spawnPickup(1700, 420, 'rocket');
     spawnPickup(1100, 760, 'medkit');
@@ -291,7 +341,8 @@ export function buildMiliMilitiaHtml(): string {
           wave += 1;
           addFloatText(player.x, player.y - 48, 'WAVE ' + wave + '!', '#38bdf8');
         }
-        const targetBots = Math.min(2 + wave, 7);
+        const d = DIFFICULTIES[difficulty];
+        const targetBots = Math.min(d.startBots + Math.floor((wave - 1) / 2), d.maxBots);
         while (bots.length < targetBots) spawnBot();
       }
     }
@@ -310,14 +361,16 @@ export function buildMiliMilitiaHtml(): string {
     const muzzleX = s.x + Math.cos(s.aim) * 22;
     const muzzleY = s.y - 4 + Math.sin(s.aim) * 22;
 
+    const d = DIFFICULTIES[difficulty];
     for (let i = 0; i < w.pellets; i++) {
-      const a = s.aim + (Math.random() - 0.5) * w.spread;
+      const scatter = s.isPlayer ? w.spread : w.spread + d.aimSpread;
+      const a = s.aim + (Math.random() - 0.5) * scatter;
       bullets.push({
         x: muzzleX,
         y: muzzleY,
         vx: Math.cos(a) * w.speed,
         vy: Math.sin(a) * w.speed,
-        dmg: w.dmg,
+        dmg: s.isPlayer ? w.dmg : Math.max(4, Math.round(w.dmg * d.botDmgMult)),
         color: w.color,
         explosive: w.explosive,
         fromPlayer: s.isPlayer,
@@ -459,9 +512,21 @@ export function buildMiliMilitiaHtml(): string {
       }
     }
 
-    // Bots AI
+    // Bots AI (staggered engagement: only closest bots attack, others patrol)
+    const diffCfg = DIFFICULTIES[difficulty];
+    const rankedBots = bots
+      .map((b) => ({ b, d: Math.hypot(player.x - b.x, player.y - b.y) }))
+      .sort((a, c) => a.d - c.d);
+    const activeAttackers = new Set(
+      rankedBots
+        .filter((item) => item.d <= diffCfg.detectRange)
+        .slice(0, diffCfg.maxAttackers)
+        .map((item) => item.b)
+    );
+
     for (const b of bots) {
       b.fireCd = Math.max(0, b.fireCd - dt);
+      b.botFireTimer = Math.max(0, b.botFireTimer - dt);
       b.invuln = Math.max(0, b.invuln - dt);
       if (b.reloading > 0) {
         b.reloading -= dt;
@@ -474,21 +539,35 @@ export function buildMiliMilitiaHtml(): string {
       const dx = player.x - b.x;
       const dy = player.y - b.y;
       const dist = Math.hypot(dx, dy);
-      b.aim = Math.atan2(dy, dx) + Math.sin(performance.now() * 0.004 + b.x) * 0.08;
+      const isAttacker = activeAttackers.has(b);
+
+      if (isAttacker) {
+        b.aim = Math.atan2(dy, dx) + Math.sin(performance.now() * 0.004 + b.x) * 0.1;
+      } else {
+        b.aim = b.aiDir >= 0 ? 0 : Math.PI;
+      }
 
       b.aiTimer -= dt;
       if (b.aiTimer <= 0) {
-        b.aiTimer = 0.6 + Math.random() * 0.9;
-        if (dist > 280) b.aiDir = Math.sign(dx);
-        else if (dist < 140) b.aiDir = -Math.sign(dx);
-        else b.aiDir = Math.random() < 0.5 ? -1 : 1;
-        b.aiJet = dy < -70 || (b.onGround && Math.random() < 0.35);
+        b.aiTimer = 0.8 + Math.random() * 1.1;
+        if (isAttacker) {
+          if (dist > 280) b.aiDir = Math.sign(dx);
+          else if (dist < 160) b.aiDir = -Math.sign(dx);
+          else b.aiDir = Math.random() < 0.5 ? -1 : 1;
+          b.aiJet = dy < -90 || (b.onGround && Math.random() < 0.28);
+        } else {
+          // Peaceful patrol away from walls
+          if (b.x < 160) b.aiDir = 1;
+          else if (b.x > WORLD_W - 160) b.aiDir = -1;
+          else if (Math.random() < 0.45) b.aiDir = -b.aiDir;
+          b.aiJet = b.onGround && Math.random() < 0.2;
+        }
       }
 
-      b.vx += (b.aiDir * 210 - b.vx) * Math.min(1, dt * 7);
-      if (b.aiJet && b.fuel > 10) {
-        b.vy -= 1550 * dt;
-        b.vy = Math.max(b.vy, -390);
+      b.vx += (b.aiDir * diffCfg.botSpeed - b.vx) * Math.min(1, dt * 6);
+      if (b.aiJet && b.fuel > 15) {
+        b.vy -= 1450 * dt;
+        b.vy = Math.max(b.vy, -370);
         b.fuel = Math.max(0, b.fuel - 32 * dt);
         b.jetActive = true;
       } else {
@@ -500,8 +579,9 @@ export function buildMiliMilitiaHtml(): string {
       b.y += b.vy * dt;
       resolvePlatforms(b, 14, 21);
 
-      if (dist < 620 && Math.random() < 0.08 + wave * 0.015) {
+      if (isAttacker && b.botFireTimer <= 0 && player.invuln <= 0) {
         fireWeapon(b);
+        b.botFireTimer = diffCfg.fireInterval + Math.random() * 0.55;
       }
     }
 
@@ -793,11 +873,11 @@ export function buildMiliMilitiaHtml(): string {
       ctx.fillStyle = '#94a3b8';
       ctx.font = 'bold 10px monospace';
       ctx.textAlign = 'left';
-      ctx.fillText('HP ' + Math.max(0, player.hp) + '/100', 24, 30);
+      ctx.fillText('HP ' + Math.max(0, player.hp) + '/' + player.maxHp, 24, 30);
       ctx.fillStyle = '#1e293b';
-      ctx.fillRect(88, 22, 124, 9);
-      ctx.fillStyle = player.hp > 35 ? '#22c55e' : '#ef4444';
-      ctx.fillRect(88, 22, 124 * Math.max(0, player.hp / 100), 9);
+      ctx.fillRect(94, 22, 118, 9);
+      ctx.fillStyle = player.hp > player.maxHp * 0.35 ? '#22c55e' : '#ef4444';
+      ctx.fillRect(94, 22, 118 * Math.max(0, player.hp / player.maxHp), 9);
 
       // Fuel
       ctx.fillStyle = '#94a3b8';
@@ -818,15 +898,15 @@ export function buildMiliMilitiaHtml(): string {
 
       // Top-center Score & Wave
       ctx.fillStyle = 'rgba(15, 23, 42, 0.82)';
-      ctx.fillRect(W / 2 - 110, 14, 220, 42);
-      ctx.strokeRect(W / 2 - 110, 14, 220, 42);
+      ctx.fillRect(W / 2 - 125, 14, 250, 42);
+      ctx.strokeRect(W / 2 - 125, 14, 250, 42);
       ctx.fillStyle = '#f8fafc';
       ctx.font = 'bold 13px monospace';
       ctx.textAlign = 'center';
       ctx.fillText('SCORE ' + score + ' · WAVE ' + wave, W / 2, 33);
-      ctx.fillStyle = '#fde047';
-      ctx.font = '10px monospace';
-      ctx.fillText('KILLS: ' + kills + '  BEST: ' + bestScore, W / 2, 48);
+      ctx.fillStyle = DIFFICULTIES[difficulty].color;
+      ctx.font = 'bold 10px monospace';
+      ctx.fillText(DIFFICULTIES[difficulty].label + ' · KILLS: ' + kills + ' · BEST: ' + bestScore, W / 2, 48);
 
       // Minimap (below top-right buttons)
       const mw = 132, mh = 72;
@@ -902,30 +982,51 @@ export function buildMiliMilitiaHtml(): string {
       ctx.textAlign = 'center';
       ctx.fillStyle = '#f97316';
       ctx.font = '800 38px system-ui, sans-serif';
-      ctx.fillText('MILI MILITIA', W / 2, H / 2 - 72);
+      ctx.fillText('MILI MILITIA', W / 2, H / 2 - 96);
 
       ctx.fillStyle = '#e2e8f0';
       ctx.font = '14px monospace';
       if (screen === 'gameover') {
-        ctx.fillText('MISSION FAILED · SCORE: ' + score + ' · KILLS: ' + kills, W / 2, H / 2 - 30);
+        ctx.fillText('MISSION FAILED · SCORE: ' + score + ' · KILLS: ' + kills, W / 2, H / 2 - 56);
         ctx.fillStyle = '#fde047';
-        ctx.fillText('BEST SCORE: ' + bestScore, W / 2, H / 2 - 6);
+        ctx.fillText('BEST SCORE: ' + bestScore, W / 2, H / 2 - 34);
       } else {
-        ctx.fillText('2D JETPACK ARENA SHOOTER', W / 2, H / 2 - 32);
+        ctx.fillText('2D JETPACK ARENA SHOOTER', W / 2, H / 2 - 58);
         ctx.fillStyle = '#94a3b8';
         ctx.font = '12px monospace';
-        ctx.fillText('WASD/Arrows + Space (Jetpack) · Mouse (Aim/Fire) · G (Frag) · Q (Swap)', W / 2, H / 2 - 6);
+        ctx.fillText('WASD/Arrows + Space (Jetpack) · Mouse (Aim/Fire) · G (Frag) · Q (Swap)', W / 2, H / 2 - 34);
+      }
+
+      // Difficulty Selector Buttons (Easy / Medium / Hard)
+      const diffKeys = ['easy', 'medium', 'hard'];
+      const bw = 96, bh = 36, gap = 12;
+      const startX = W / 2 - (bw * 3 + gap * 2) / 2;
+      const by = H / 2 - 10;
+      for (let i = 0; i < diffKeys.length; i++) {
+        const dk = diffKeys[i];
+        const dc = DIFFICULTIES[dk];
+        const bx = startX + i * (bw + gap);
+        const active = difficulty === dk;
+        ctx.fillStyle = active ? dc.color : 'rgba(15, 23, 42, 0.9)';
+        ctx.fillRect(bx, by, bw, bh);
+        ctx.strokeStyle = active ? '#ffffff' : '#475569';
+        ctx.lineWidth = active ? 2 : 1.5;
+        ctx.strokeRect(bx, by, bw, bh);
+        ctx.fillStyle = active ? '#0f172a' : '#e2e8f0';
+        ctx.font = 'bold 12px monospace';
+        ctx.textBaseline = 'middle';
+        ctx.fillText(dc.label, bx + bw / 2, by + bh / 2);
       }
 
       // Start button
       ctx.fillStyle = '#ea580c';
-      ctx.fillRect(W / 2 - 96, H / 2 + 24, 192, 46);
+      ctx.fillRect(W / 2 - 96, H / 2 + 46, 192, 46);
       ctx.strokeStyle = '#ffffff';
       ctx.lineWidth = 2;
-      ctx.strokeRect(W / 2 - 96, H / 2 + 24, 192, 46);
+      ctx.strokeRect(W / 2 - 96, H / 2 + 46, 192, 46);
       ctx.fillStyle = '#ffffff';
       ctx.font = 'bold 15px monospace';
-      ctx.fillText(screen === 'gameover' ? 'DEPLOY AGAIN' : 'DEPLOY NOW', W / 2, H / 2 + 48);
+      ctx.fillText(screen === 'gameover' ? 'DEPLOY AGAIN' : 'DEPLOY NOW', W / 2, H / 2 + 69);
     }
   }
 
@@ -947,12 +1048,38 @@ export function buildMiliMilitiaHtml(): string {
     return false;
   }
 
+  function handleOverlayClick(x, y) {
+    const diffKeys = ['easy', 'medium', 'hard'];
+    const bw = 96, bh = 36, gap = 12;
+    const startX = W / 2 - (bw * 3 + gap * 2) / 2;
+    const by = H / 2 - 10;
+    for (let i = 0; i < diffKeys.length; i++) {
+      const bx = startX + i * (bw + gap);
+      if (x >= bx && x <= bx + bw && y >= by && y <= by + bh) {
+        difficulty = diffKeys[i];
+        playTone(540, 0.07, 'triangle', 0.06, 80);
+        return;
+      }
+    }
+    if (
+      x >= W / 2 - 96 && x <= W / 2 + 96 &&
+      y >= H / 2 + 46 && y <= H / 2 + 92
+    ) {
+      startGame();
+    }
+  }
+
   window.addEventListener('keydown', (e) => {
     keys[e.code] = true;
-    if ((screen === 'title' || screen === 'gameover') && (e.code === 'Enter' || e.code === 'Space')) {
-      e.preventDefault();
-      startGame();
-      return;
+    if (screen === 'title' || screen === 'gameover') {
+      if (e.code === 'Digit1') { difficulty = 'easy'; return; }
+      if (e.code === 'Digit2') { difficulty = 'medium'; return; }
+      if (e.code === 'Digit3') { difficulty = 'hard'; return; }
+      if (e.code === 'Enter' || e.code === 'Space') {
+        e.preventDefault();
+        startGame();
+        return;
+      }
     }
     if (screen === 'playing' && player) {
       if (e.code === 'KeyG') throwGrenade(player);
@@ -972,12 +1099,7 @@ export function buildMiliMilitiaHtml(): string {
     ensureAudio();
     if (handleTopButtons(e.clientX, e.clientY)) return;
     if (screen === 'title' || screen === 'gameover') {
-      if (
-        e.clientX >= W / 2 - 96 && e.clientX <= W / 2 + 96 &&
-        e.clientY >= H / 2 + 24 && e.clientY <= H / 2 + 70
-      ) {
-        startGame();
-      }
+      handleOverlayClick(e.clientX, e.clientY);
       return;
     }
     if (e.button === 2) throwGrenade(player);
@@ -992,7 +1114,7 @@ export function buildMiliMilitiaHtml(): string {
     for (const t of e.changedTouches) {
       if (handleTopButtons(t.clientX, t.clientY)) continue;
       if (screen === 'title' || screen === 'gameover') {
-        startGame();
+        handleOverlayClick(t.clientX, t.clientY);
         continue;
       }
       if (t.clientX >= W - 156 && t.clientX <= W - 104 && t.clientY >= H - 46 && t.clientY <= H - 14) {

@@ -142,9 +142,9 @@ export const ARCADE_GAMES: ArcadeGameMeta[] = [
     description:
       "Side-scrolling 2200×1200 tactical arena with jetpack flight, 4 weapons (Assault, Shotgun, Railgun, Rocket), frag grenades, and AI militia waves.",
     highlights: [
-      "Jetpack flight, cover platforms & live minimap",
-      "4 switchable weapons + bouncing frag grenades",
-      "Escalating AI militia bot waves & persistent best score",
+      "Easy, Medium & Hard difficulty levels",
+      "Staggered patrol & engagement AI (no instant swarming)",
+      "4 switchable weapons, frag grenades & live minimap",
     ],
     controls: "WASD/Arrows + Space (Jetpack) · Mouse (Aim/Fire) · G (Frag) · Q (Swap)",
     buildHtml: buildMiliMilitiaHtml,
