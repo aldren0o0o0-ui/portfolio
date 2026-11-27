@@ -1,10 +1,11 @@
 import React, { useState } from "react";
-import { Menu, X } from "lucide-react";
+import { Menu, X, Eye } from "lucide-react";
 import {
   resolvePortfolioRoute,
   useBrowserStore,
 } from "../../browser/store/browserStore";
 import { PROFILE_DATA } from "../../../data/profile";
+import { useVisitorCount } from "../hooks/useVisitorCount";
 import { OverviewPage } from "../../home/pages/OverviewPage/OverviewPage";
 import { AboutPage } from "../../about/pages/AboutPage";
 import { ProjectsPage } from "../../projects/pages/ProjectsPage";
@@ -35,6 +36,7 @@ const NAV_ITEMS: NavItem[] = [
 export const PortfolioLayout: React.FC = () => {
   const { tabs, activeTabId, navigateTab } = useBrowserStore();
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+  const visitorCount = useVisitorCount();
 
   const activeTab = tabs.find((t: Tab) => t.id === activeTabId);
   const currentUrl = activeTab?.url || "portfolio://newtab";
@@ -165,9 +167,22 @@ export const PortfolioLayout: React.FC = () => {
       {/* Minimal Monospace Footer */}
       <footer className={styles.footer}>
         <div className={styles.footerInner}>
-          <span className={styles.footerLeft}>
-            {PROFILE_DATA.contact.email} • {PROFILE_DATA.contact.location}
-          </span>
+          <div className={styles.footerLeftGroup}>
+            <span className={styles.footerLeft}>
+              {PROFILE_DATA.contact.email} • {PROFILE_DATA.contact.location}
+            </span>
+            <span
+              className={styles.visitorBadge}
+              aria-label="Portfolio visitor count"
+              title="Total portfolio visits"
+            >
+              <Eye size={13} aria-hidden="true" />
+              <span>
+                VISITORS:{" "}
+                {visitorCount !== null ? visitorCount.toLocaleString() : "—"}
+              </span>
+            </span>
+          </div>
           <button
             type="button"
             className={styles.footerRight}

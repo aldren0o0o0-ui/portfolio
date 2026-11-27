@@ -197,6 +197,28 @@
   color: var(--text-secondary);
 }
 
+.footerLeftGroup {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  flex-wrap: wrap;
+}
+
+.visitorBadge {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 3px 9px;
+  background-color: var(--bg-surface);
+  border: 1.5px solid var(--border-ink);
+  box-shadow: var(--shadow-brutal-xs);
+  border-radius: var(--radius-xs);
+  font-family: var(--font-mono);
+  font-size: 0.6875rem;
+  font-weight: 600;
+  color: var(--text-primary);
+}
+
 .footerRight:hover {
   color: var(--accent-primary);
 }
