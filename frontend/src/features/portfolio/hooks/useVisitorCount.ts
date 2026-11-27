@@ -2,7 +2,8 @@ import { useEffect, useState } from "react";
 
 const COUNTER_NAMESPACE = "aldren-dico-portfolio";
 const COUNTER_KEY = "visits";
-const BASE_URL = `https://api.counterapi.dev/v2/${COUNTER_NAMESPACE}/${COUNTER_KEY}`;
+const HIT_URL = `https://abacus.jasoncameron.dev/hit/${COUNTER_NAMESPACE}/${COUNTER_KEY}`;
+const GET_URL = `https://abacus.jasoncameron.dev/get/${COUNTER_NAMESPACE}/${COUNTER_KEY}`;
 const SESSION_FLAG_KEY = "portfolio_visit_counted";
 const SESSION_VALUE_KEY = "portfolio_visit_count";
 
@@ -12,7 +13,7 @@ async function fetchVisitorCount(signal?: AbortSignal): Promise<number | null> {
   if (typeof window === "undefined") return null;
 
   const alreadyCounted = window.sessionStorage.getItem(SESSION_FLAG_KEY) === "1";
-  const endpoint = alreadyCounted ? BASE_URL : `${BASE_URL}/up`;
+  const endpoint = alreadyCounted ? GET_URL : HIT_URL;
 
   // Mark synchronously before awaiting so React StrictMode double-effect won't double-increment
   if (!alreadyCounted) {
@@ -27,10 +28,10 @@ async function fetchVisitorCount(signal?: AbortSignal): Promise<number | null> {
       }
       return null;
     }
-    const data = (await res.json()) as { count?: number };
-    if (typeof data.count === "number") {
-      window.sessionStorage.setItem(SESSION_VALUE_KEY, String(data.count));
-      return data.count;
+    const data = (await res.json()) as { value?: number };
+    if (typeof data.value === "number") {
+      window.sessionStorage.setItem(SESSION_VALUE_KEY, String(data.value));
+      return data.value;
     }
     return null;
   } catch {
